@@ -6,9 +6,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
     <script src="../src/ng-game-of-life.js"></script>
     <script src="example-app.js"></script>
+
+    <style media="screen" type="text/css">
+
+        .universe {
+            border: 1px solid grey;
+        }
+
+    </style>
 </head>
 <body ng-controller="GameController">
-    <h1>{{ test }}</h1>
+    <h1>Game of Life</h1>
     <universe></universe>
 
     <div ng-controller="GameController">

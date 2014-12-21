@@ -13,36 +13,44 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
 
     module.factory('universe', function() {
         return new function() {
+
+            var cellList = [];
+
             this.cells = [];
             this.width = 0;
             this.height = 0;
             this.generation = 0;
 
-            this.init = function(width, height) {
-                this.width = width;
-                this.height = height;
+            /**
+             *
+             * @param dimensions
+             */
+            this.init = function(dimensions) {
+                this.width = dimensions[0];
+                this.height = dimensions[1];
                 for(var i = 0; i < this.width; i++) {
                     this.cells.push(new Array(this.width));
 
                     for(var j = 0; j < this.height; j++) {
-                        this.cells[i][j] = {
+                        var cell = {
                             x: i,
                             y: j,
                             isAlive: 0,
                             next: 0
                         };
+
+                        this.cells[i][j] = cell;
+                        cellList.push(cell);
                     }
                 }
             };
 
+            /**
+             *
+             * @returns {Array}
+             */
             this.getCells = function() {
-                var allCells = [];
-                for(var i = 0; i < this.width; i++) {
-                    for(var j = 0; j < this.height; j++) {
-                        allCells.push(this.cells[i][j]);
-                    }
-                }
-                return allCells;
+                return cellList;
             };
 
             this.getLifeNeighboursCount = function(cell) {
@@ -90,7 +98,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
     function gameOfLife($interval) {
         return {
             restrict: 'E',
-            template: '<canvas width="800" height="600"></canvas>',
+            template: '<canvas class="universe"></canvas>',
             replace: true,
             controller: function($scope, universe) {
 
@@ -128,7 +136,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                             var c = cells[j];
                             c.isAlive = c.next;
                         }
-
+                        // each timeout is a new generation
                         universe.incrementGeneration();
                     }, $scope.config.speed);
 
@@ -140,7 +148,11 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 var ctx = canvas.getContext('2d');
 
                 var config = scope.config;
-                scope.universe.init(30, 20);
+                scope.universe.init(config.dimensions);
+
+
+                canvas.setAttribute('width', config.canvas[0]);
+                canvas.setAttribute('height', config.canvas[1]);
 
                 /**
                  * Check the universe for changes and redraw the canvas
@@ -149,8 +161,10 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                     redraw(scope.universe);
                 });
 
-                if(config.autoStart) {
+                if(config.random) {
                     scope.randomize();
+                }
+                if(config.autoStart) {
                     scope.start();
                 }
 
@@ -158,10 +172,9 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                  * Redraws the whole canvas. Living cells are shown as squares.
                  */
                 function redraw(universe) {
-                    var width = config.dimensions[0];
-                    var height = config.dimensions[1];
                     var border = config.borderSize;
-
+                    var width = (canvas.width / config.dimensions[0]) - border;
+                    var height = canvas.height / config.dimensions[1] - border;
                     var cells = universe.getCells();
                     ctx.clearRect ( 0 , 0 , canvas.width, canvas.height );
                     for(var i in cells) {

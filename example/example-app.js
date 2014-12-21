@@ -5,15 +5,14 @@
 var app = angular.module('game-of-life-example', ['ng-game-of-life']);
 
 app.controller("GameController", function($scope) {
-   $scope.test = "adf";
 
    $scope.config = {
       autoStart: true,
       mode: 'stretch',
-      dimensions: [20, 20],
-      animation: false,
+      canvas: [800, 600],
+      dimensions: [100, 80],
       borderSize: 2,
-      color: "rgb(200,0,0)",
+      color: "#428bca", //"rgb(200,0,0)",
       speed: 50,
       acceptMouse: false,
       init: [],
