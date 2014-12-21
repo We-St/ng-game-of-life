@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="game-of-life-example">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+    <script src="../src/ng-game-of-life.js"></script>
+    <script src="example-app.js"></script>
+</head>
+<body ng-controller="GameController">
+    <h1>{{ test }}</h1>
+    <universe></universe>
+
+    <div ng-controller="GameController">
+        <button ng-click="start()">Start</button>
+        <button ng-click="pause()">Pause</button>
+        <button ng-click="stop()">Stop</button>
+
+        <gameboard config="config"></gameboard>
+    </div>
+</body>
+</html>
